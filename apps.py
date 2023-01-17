@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ExtendedRephotographyConfig(AppConfig):
+class RephotographyConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.extended_rephotography'
+    name = 'apps.rephotography'
