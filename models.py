@@ -46,7 +46,7 @@ class Tag(abstract.AbstractTagModel):
 
 
 class Focus(abstract.AbstractBaseModel):
-    Place = models.GeometryField(blank=True, null=True)
+    place = models.GeometryField(blank=True, null=True)
     text = models.TextField(null=True, blank=True)
 
 
@@ -54,8 +54,8 @@ class Focus(abstract.AbstractBaseModel):
 class Image(abstract.AbstractTIFFImageModel):
 
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("general.title"))
-    creator = models.ManyToManyField(Creator, blank=True, related_name="photographer")
-    placename   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="images")
+    creator = models.ForeignKey(Creator, on_delete=models.CASCADE, blank=True, related_name="photographer")
+    placename   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="image_location")
     description = models.TextField(null=True, blank=True, help_text=("Descriptive text about the the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of photography"))
     tag = models.ForeignKey(Tag, blank=True, null=True, on_delete=models.CASCADE, verbose_name=_("tags"))
@@ -67,10 +67,12 @@ class Image(abstract.AbstractTIFFImageModel):
 # Video
 class Video(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("general.title"))
-    creator = models.ManyToManyField(Creator, blank=True, related_name="director")
+    creator = models.ForeignKey(Creator, on_delete=models.CASCADE, blank=True, related_name="director")
+    placename  = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="video_location")
     link = models.URLField(blank=True, null=True, help_text=("Video link in GU Play"))
     description = models.TextField(null=True, blank=True, help_text=("Descriptive text about the the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of video"))
+    focus = models.ForeignKey(Focus, null=True, blank=True, on_delete=models.CASCADE, help_text=("what is documented, also a place on a map"))
     tag = models.ForeignKey(Tag, blank=True, null=True, on_delete=models.CASCADE, verbose_name=_("tags"))
 
     def __str__(self) -> str:
@@ -79,9 +81,11 @@ class Video(abstract.AbstractBaseModel):
 # Observation
 class Observation(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("general.title"))
-    creator = models.ManyToManyField(Creator, blank=True, related_name="researcher")
+    creator = models.ForeignKey(Creator, on_delete=models.CASCADE, blank=True, related_name="researcher")
+    placename   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="research_location")
     description = models.TextField(null=True, blank=True, help_text=("Descriptive text about the the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of tacking note"))
+    focus = models.ForeignKey(Focus, null=True, blank=True, on_delete=models.CASCADE, help_text=("what is documented, also a place on a map"))
     tag = models.ForeignKey(Tag, blank=True, null=True, on_delete=models.CASCADE, verbose_name=_("tags"))
 
     def __str__(self) -> str:
