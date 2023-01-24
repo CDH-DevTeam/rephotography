@@ -46,7 +46,7 @@ class Tag(abstract.AbstractTagModel):
 
 
 class Focus(abstract.AbstractBaseModel):
-    place = models.GeometryField(blank=True, null=True)
+    place = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
     text = models.TextField(null=True, blank=True)
 
 
