@@ -4,6 +4,17 @@ import diana.abstract.models as abstract
 from django.utils.translation import gettext_lazy as _
 # Create your models here.
 
+
+# Tag 
+class Tag(abstract.AbstractTagModel):
+
+    def __str__(self) -> str:
+        return self.text
+
+    class Meta:
+        verbose_name = _("Tag")
+        verbose_name_plural = _("Tags")
+
 # Place
 class Place(abstract.AbstractBaseModel):
     
@@ -11,6 +22,9 @@ class Place(abstract.AbstractBaseModel):
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
     comment  = models.TextField(null=True, blank=True, verbose_name=_("comment"))
+    tag = models.ForeignKey(Tag, blank=True, null=True, on_delete=models.CASCADE, verbose_name=_("tags"))
+    min_year = models.DateField(blank=True, null=True)
+    max_year = models.DateField(blank=True, null=True)
 
     def __str__(self) -> str:
         return self.name
@@ -34,17 +48,6 @@ class Creator(abstract.AbstractBaseModel):
 
 
 
-# Tag 
-class Tag(abstract.AbstractTagModel):
-
-    def __str__(self) -> str:
-        return self.text
-
-    class Meta:
-        verbose_name = _("Tag")
-        verbose_name_plural = _("Tags")
-
-
 class Focus(abstract.AbstractBaseModel):
     place = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
     text = models.TextField(null=True, blank=True)
@@ -60,6 +63,11 @@ class Image(abstract.AbstractTIFFImageModel):
     date = models.DateField(null=True, blank=True, help_text=("Date of photography"))
     tag = models.ForeignKey(Tag, blank=True, null=True, on_delete=models.CASCADE, verbose_name=_("tags"))
     focus = models.ForeignKey(Focus, null=True, blank=True, on_delete=models.CASCADE, help_text=("what is documented, also a place on a map"))
+
+    
+    class Meta:
+        verbose_name = _("Image")
+        verbose_name_plural = _("Images")
 
     def __str__(self) -> str:
         return f"{self.title}"
