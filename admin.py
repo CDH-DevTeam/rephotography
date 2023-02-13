@@ -18,8 +18,8 @@ class CreatorAdmin(admin.ModelAdmin):
 
 @admin.register(Place)
 class PlaceAdmin(admin.GISModelAdmin):
-    list_display = ['placename', 'geometry', 'description', 'comment']
-    search_fields = ['placename']
+    list_display = ['name', 'geometry', 'description', 'comment']
+    search_fields = ['name']
 
 
 @admin.register(Tag)
@@ -36,8 +36,8 @@ class FocusAdmin(admin.GISModelAdmin):
 
 @admin.register(Image)
 class ImageModel(admin.ModelAdmin):
-    autocomplete_fields = ['creator', 'placename', 'tag', 'focus']
-    list_display = ['title', 'creator', 'placename', 'date', 'description']
+    autocomplete_fields = ['creator', 'name', 'tag', 'focus']
+    list_display = ['title', 'creator', 'name', 'date', 'description']
 
     list_per_page = 10
 
@@ -51,12 +51,12 @@ class RePhotographyAdmin(admin.ModelAdmin):
 
 @admin.register(Video)
 class VideoModel(admin.ModelAdmin):
-    autocomplete_fields = ['creator', 'placename', 'tag', 'focus']
-    list_display = ['title', 'creator', 'placename', 'link', 'date', 'description']
+    autocomplete_fields = ['creator', 'name', 'tag', 'focus']
+    list_display = ['title', 'creator', 'name', 'link', 'date', 'description']
 
 @admin.register(Observation)
 class ObservationModel(admin.ModelAdmin):
-    autocomplete_fields = ['creator', 'placename', 'tag', 'focus']
-    list_display = ['title', 'creator', 'placename', 'date', 'description']
+    autocomplete_fields = ['creator', 'name', 'tag', 'focus']
+    list_display = ['title', 'creator', 'name', 'date', 'description']
 
 
