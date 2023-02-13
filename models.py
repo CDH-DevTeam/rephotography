@@ -18,7 +18,7 @@ class Tag(abstract.AbstractTagModel):
 # Place
 class Place(abstract.AbstractBaseModel):
     
-    placename = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Free-form, non-indexed placename of the site."))
+    name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Free-form, non-indexed placename of the site."))
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
     comment  = models.TextField(null=True, blank=True, verbose_name=_("comment"))
