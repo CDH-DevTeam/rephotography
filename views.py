@@ -20,7 +20,7 @@ class PlaceGeoViewSet(GeoViewSet):
     serializer_class = serializers.PlaceGeoSerializer
     filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
     search_fields = ['placename']
-    bbox_filter_field = 'tag'
+    bbox_filter_field = 'geometry'
     bbox_filter_include_overlapping = True
 
 
