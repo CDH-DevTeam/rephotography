@@ -27,7 +27,7 @@ class Place(abstract.AbstractBaseModel):
     max_year = models.DateField(blank=True, null=True)
 
     def __str__(self) -> str:
-        return self.name
+        return self.placename
 
     class Meta:
         verbose_name = _("Placename")
