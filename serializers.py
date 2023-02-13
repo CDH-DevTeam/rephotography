@@ -27,3 +27,22 @@ class TIFFImageSerializer(DynamicDepthSerializer):
         fields = get_fields(Image, exclude=DEFAULT_FIELDS)
 
 
+class VideoSerializer(DynamicDepthSerializer):
+
+    class Meta:
+        model = Video
+        fields = get_fields(Video, exclude=DEFAULT_FIELDS)
+
+
+class ObservationSerializer(DynamicDepthSerializer):
+
+    class Meta:
+        model = Observation
+        fields = get_fields(Observation, exclude=DEFAULT_FIELDS)
+
+
+class RePhotographySerializer(DynamicDepthSerializer):
+
+    class Meta:
+        model = RePhotography
+        fields = get_fields(RePhotography, exclude=DEFAULT_FIELDS)

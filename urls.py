@@ -10,9 +10,9 @@ documentation = utils.build_app_api_documentation("rephotography", endpoint)
 
 router.register(rf'{endpoint}/place', views.PlaceGeoViewSet, basename='place')
 router.register(rf'{endpoint}/image', views.IIIFImageViewSet, basename='image')
-# router.register(rf'{endpoint}/video', views.IIIFImageViewSet, basename='image')
-# router.register(rf'{endpoint}/observation', views.IIIFImageViewSet, basename='image')
-# router.register(rf'{endpoint}/rephotography', views.IIIFImageViewSet, basename='image')
+router.register(rf'{endpoint}/video', views.VideoViewSet, basename='video')
+router.register(rf'{endpoint}/observation', views.ObservationViewSet, basename='observation')
+router.register(rf'{endpoint}/rephotography', views.RePhotographyViewSet, basename='rephotography')
 
 urlpatterns = [
     path('', include(router.urls)),

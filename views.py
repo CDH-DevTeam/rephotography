@@ -40,3 +40,23 @@ class IIIFImageViewSet(DynamicDepthViewSet):
     queryset = models.Image.objects.all()
     serializer_class = serializers.TIFFImageSerializer
     filterset_fields = get_fields(models.Image, exclude=DEFAULT_FIELDS + ['iiif_file', 'file'])
+
+
+class VideoViewSet(DynamicDepthViewSet):
+    
+    queryset = models.Video.objects.all()
+    serializer_class = serializers.VideoSerializer
+    filterset_fields = get_fields(models.Video, exclude=DEFAULT_FIELDS)
+
+
+class ObservationViewSet(DynamicDepthViewSet):
+    
+    queryset = models.Observation.objects.all()
+    serializer_class = serializers.ObservationSerializer
+    filterset_fields = get_fields(models.Observation, exclude=DEFAULT_FIELDS)
+
+class RePhotographyViewSet(DynamicDepthViewSet):
+    
+    queryset = models.RePhotography.objects.all()
+    serializer_class = serializers.RePhotographySerializer
+    filterset_fields = get_fields(models.RePhotography, exclude=DEFAULT_FIELDS)
