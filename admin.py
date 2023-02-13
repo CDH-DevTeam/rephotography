@@ -36,6 +36,7 @@ class FocusAdmin(admin.GISModelAdmin):
 
 @admin.register(Image)
 class ImageModel(admin.ModelAdmin):
+    readonly_fields     = ['iiif_file']
     autocomplete_fields = ['creator', 'place', 'tag', 'focus']
     list_display = ['title', 'creator', 'place', 'date', 'description']
 
