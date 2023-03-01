@@ -1,7 +1,6 @@
 from unittest.mock import DEFAULT
-from rest_framework import viewsets
 from . import models, serializers
-
+from django.db.models import Count, Q
 from diana.abstract.views import DynamicDepthViewSet, GeoViewSet
 from diana.abstract.models import get_fields, DEFAULT_FIELDS
 
@@ -12,6 +11,7 @@ class PlaceViewSet(DynamicDepthViewSet):
     serializer_class = serializers.PlaceSerializer
     filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
     search_fields = ['placename']
+    
 
 
 class PlaceGeoViewSet(GeoViewSet):
@@ -41,6 +41,14 @@ class IIIFImageViewSet(DynamicDepthViewSet):
     serializer_class = serializers.TIFFImageSerializer
     filterset_fields = get_fields(models.Image, exclude=DEFAULT_FIELDS + ['iiif_file', 'file'])
 
+
+    # def get_queryset(self):
+    #     queryset = models.Image.objects.annotate(
+    #         count=Count('place', distinct=True),
+    #         ).filter(count=1)
+    #     return queryset
+
+    
 
 class VideoViewSet(DynamicDepthViewSet):
     

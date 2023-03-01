@@ -18,6 +18,7 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
         model = Place
         fields = get_fields(Place, exclude=DEFAULT_FIELDS)
         geo_field = 'geometry'
+        depth = 1
 
 
 class TIFFImageSerializer(DynamicDepthSerializer):

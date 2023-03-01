@@ -22,7 +22,7 @@ class Place(abstract.AbstractBaseModel):
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
     comment  = models.TextField(null=True, blank=True, verbose_name=_("comment"))
-    tag = models.ManyToManyField(Tag, blank=True, null=True, verbose_name=_("tags"))
+    tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
     min_year = models.DateField(blank=True, null=True)
     max_year = models.DateField(blank=True, null=True)
 
@@ -68,7 +68,7 @@ class Image(abstract.AbstractTIFFImageModel):
     place   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="image_location")
     description = models.TextField(null=True, blank=True, help_text=("Descriptive text about the the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of photography"))
-    tag = models.ManyToManyField(Tag, blank=True, null=True, verbose_name=_("tags"))
+    tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
     focus = models.ForeignKey(Focus, null=True, blank=True, on_delete=models.CASCADE, help_text=("what is documented, also a place on a map"))
 
     
@@ -88,7 +88,7 @@ class Video(abstract.AbstractBaseModel):
     description = models.TextField(null=True, blank=True, help_text=("Descriptive text about the the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of video"))
     focus = models.ForeignKey(Focus, null=True, blank=True, on_delete=models.CASCADE, help_text=("what is documented, also a place on a map"))
-    tag = models.ManyToManyField(Tag, blank=True, null=True, verbose_name=_("tags"))
+    tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
 
     def __str__(self) -> str:
         return f"{self.title}"
@@ -101,7 +101,7 @@ class Observation(abstract.AbstractBaseModel):
     description = models.TextField(null=True, blank=True, help_text=("Descriptive text about the the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of tacking note"))
     focus = models.ForeignKey(Focus, null=True, blank=True, on_delete=models.CASCADE, help_text=("what is documented, also a place on a map"))
-    tag = models.ManyToManyField(Tag, blank=True, null=True, verbose_name=_("tags"))
+    tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
 
     def __str__(self) -> str:
         return f"{self.title}"        
