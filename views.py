@@ -22,15 +22,18 @@ class PlaceViewSet(DynamicDepthViewSet):
             queryset = models.Place.objects.all().filter(id__in=list(models.Image.objects.values_list('place', flat=True)))\
             .filter(min_year__year= start_date)\
             .filter(max_year__year= end_date)\
-            .filter(Q(min_year__year= start_date) & Q(max_year__year= end_date))
+            .filter(Q(min_year__year__gte= start_date) & Q(max_year__year__lte= end_date))
         elif model_name in 'video':
-            queryset = models.Place.objects.all().filter(id__in=list(models.Video.objects.values_list('place', flat=True)))
+            queryset = models.Place.objects.all().filter(id__in=list(models.Video.objects.values_list('place', flat=True)))\
+            .filter(min_year__year= start_date)\
+            .filter(max_year__year= end_date)\
+            .filter(Q(min_year__year__gte= start_date) & Q(max_year__year__lte= end_date))
         elif model_name in 'observation':
-            queryset = models.Place.objects.all().filter(id__in=list(models.Observation.objects.values_list('place', flat=True)))
+            queryset = models.Place.objects.all().filter(id__in=list(models.Observation.objects.values_list('place', flat=True)))\
+            .filter(min_year__year= start_date)\
+            .filter(max_year__year= end_date)\
+            .filter(Q(min_year__year__gte= start_date) & Q(max_year__year__lte= end_date))
         return queryset
-
-
-
 
 class PlaceGeoViewSet(GeoViewSet):
 

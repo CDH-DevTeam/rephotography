@@ -2,6 +2,8 @@
 from django.contrib.gis.db import models
 import diana.abstract.models as abstract
 from django.utils.translation import gettext_lazy as _
+from diana.storages import OriginalFileStorage
+from diana.abstract.models import get_original_path
 # Create your models here.
 
 
@@ -97,6 +99,7 @@ class Video(abstract.AbstractBaseModel):
 class Observation(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("general.title"))
     creator = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="researcher")
+    document = models.FileField(null=True, blank=True, storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("general.file"))
     place   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="research_location")
     description = models.TextField(null=True, blank=True, help_text=("Descriptive text about the the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of tacking note"))
