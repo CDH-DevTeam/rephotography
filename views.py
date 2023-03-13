@@ -6,7 +6,6 @@ from diana.abstract.models import get_fields, DEFAULT_FIELDS
 
 
 class PlaceViewSet(DynamicDepthViewSet):
-    # queryset = models.Place.objects.all()
     serializer_class = serializers.PlaceSerializer
     filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
     search_fields = ['placename']
@@ -14,7 +13,8 @@ class PlaceViewSet(DynamicDepthViewSet):
         model_name = str(self.request.query_params.get('type'))
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
-        queryset = ''
+        queryset = models.Place.objects.all()
+
         if model_name in 'image':
             if end_date:
                 queryset = models.Place.objects.all().filter(id__in=list(models.Image.objects.values_list('place', flat=True)))\
@@ -50,12 +50,12 @@ class PlaceGeoViewSet(GeoViewSet):
     search_fields = ['placename']
     bbox_filter_field = 'geometry'
     bbox_filter_include_overlapping = True
-    
+
     def get_queryset(self):
         model_name = str(self.request.query_params.get('type'))
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
-        queryset = ''
+        queryset = models.Place.objects.all()
         if model_name in 'image':
             if end_date:
                 queryset = models.Place.objects.all().filter(id__in=list(models.Image.objects.values_list('place', flat=True)))\
