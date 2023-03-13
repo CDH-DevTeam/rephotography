@@ -9,37 +9,30 @@ class PlaceViewSet(DynamicDepthViewSet):
     serializer_class = serializers.PlaceSerializer
     filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
     search_fields = ['placename']
+
+    def dispatch(self, request, *args, **kwargs):
+        model_name = request.GET['type']
+        if model_name == 'image':
+            self.model = models.Image
+        elif model_name == 'video':
+            self.model = models.Video
+        elif model_name == 'observation':
+            self.model = models.Observation
+        return super(PlaceViewSet, self).dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
-        model_name = str(self.request.query_params.get('type'))
+        queryset = models.Place.objects.all()
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
-        queryset = models.Place.objects.all()
+        objects = self.model.objects.all()
+        if start_date and end_date:
+            objects = objects.filter(date__year__gte=start_date, date__year__lte=end_date)
+        elif start_date:
+            objects = objects.filter(date__year=start_date)
 
-        if model_name in 'image':
-            if end_date:
-                queryset = models.Place.objects.all().filter(id__in=list(models.Image.objects.values_list('place', flat=True)))\
-                .prefetch_related(Prefetch('image_location', queryset = models.Image.objects.filter(date__year__gte=start_date).filter(date__year__lte=end_date))) 
-            else:
-                queryset = models.Place.objects.all().filter(id__in=list(models.Image.objects.values_list('place', flat=True)))\
-                .prefetch_related(Prefetch('image_location', queryset = models.Image.objects.filter(date__year=start_date)))
+        queryset = models.Place.objects.all().filter(id__in=list(objects.values_list('place', flat=True)))
 
-        elif model_name in 'video':
-            if end_date:
-                queryset = models.Place.objects.all().filter(id__in=list(models.Video.objects.values_list('place', flat=True)))\
-                .prefetch_related(Prefetch('video_location', queryset = models.Video.objects.filter(date__year__gte=start_date).filter(date__year__lte=end_date))) 
-            else:
-                queryset = models.Place.objects.all().filter(id__in=list(models.Video.objects.values_list('place', flat=True)))\
-                .prefetch_related(Prefetch('video_location', queryset = models.Video.objects.filter(date__year=start_date)))
-
-        elif model_name in 'observation':
-            if end_date:
-                queryset = models.Place.objects.all().filter(id__in=list(models.Observation.objects.values_list('place', flat=True)))\
-                .prefetch_related(Prefetch('research_location', queryset = models.Observation.objects.filter(date__year__gte=start_date).filter(date__year__lte=end_date))) 
-            else:
-                queryset = models.Place.objects.all().filter(id__in=list(models.Observation.objects.values_list('place', flat=True)))\
-                .prefetch_related(Prefetch('research_location', queryset = models.Observation.objects.filter(date__year=start_date)))
         return queryset
-
 
 
 class PlaceGeoViewSet(GeoViewSet):
@@ -51,36 +44,29 @@ class PlaceGeoViewSet(GeoViewSet):
     bbox_filter_field = 'geometry'
     bbox_filter_include_overlapping = True
 
+    def dispatch(self, request, *args, **kwargs):
+        model_name = request.GET['type']
+        if model_name == 'image':
+            self.model_type = models.Image
+        elif model_name == 'video':
+            self.model_type = models.Video
+        elif model_name == 'observation':
+            self.model_type = models.Observation
+        return super(PlaceGeoViewSet, self).dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
-        model_name = str(self.request.query_params.get('type'))
+        queryset = models.Place.objects.all()
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
-        queryset = models.Place.objects.all()
-        if model_name in 'image':
-            if end_date:
-                queryset = models.Place.objects.all().filter(id__in=list(models.Image.objects.values_list('place', flat=True)))\
-                .prefetch_related(Prefetch('image_location', queryset = models.Image.objects.filter(date__year__gte=start_date).filter(date__year__lte=end_date))) 
-            else:
-                queryset = models.Place.objects.all().filter(id__in=list(models.Image.objects.values_list('place', flat=True)))\
-                .prefetch_related(Prefetch('image_location', queryset = models.Image.objects.filter(date__year=start_date)))
+        objects = self.model_type.objects.all()
+        if start_date and end_date:
+            objects = objects.filter(date__year__gte=start_date, date__year__lte=end_date)
+        elif start_date:
+            objects = objects.filter(date__year=start_date)
 
-        elif model_name in 'video':
-            if end_date:
-                queryset = models.Place.objects.all().filter(id__in=list(models.Video.objects.values_list('place', flat=True)))\
-                .prefetch_related(Prefetch('video_location', queryset = models.Video.objects.filter(date__year__gte=start_date).filter(date__year__lte=end_date))) 
-            else:
-                queryset = models.Place.objects.all().filter(id__in=list(models.Video.objects.values_list('place', flat=True)))\
-                .prefetch_related(Prefetch('video_location', queryset = models.Video.objects.filter(date__year=start_date)))
+        queryset = models.Place.objects.all().filter(id__in=list(objects.values_list('place', flat=True)))
 
-        elif model_name in 'observation':
-            if end_date:
-                queryset = models.Place.objects.all().filter(id__in=list(models.Observation.objects.values_list('place', flat=True)))\
-                .prefetch_related(Prefetch('research_location', queryset = models.Observation.objects.filter(date__year__gte=start_date).filter(date__year__lte=end_date))) 
-            else:
-                queryset = models.Place.objects.all().filter(id__in=list(models.Observation.objects.values_list('place', flat=True)))\
-                .prefetch_related(Prefetch('research_location', queryset = models.Observation.objects.filter(date__year=start_date)))
         return queryset
-
 
 # Create your views here.
 class IIIFImageViewSet(DynamicDepthViewSet):
