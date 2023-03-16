@@ -114,5 +114,10 @@ class Observation(abstract.AbstractBaseModel):
 
 # Re-photography
 class RePhotography(abstract.AbstractBaseModel):
+    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("general.title"))
     old_image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="old_image")
     new_image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="new_image")
+    tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
+
+    def __str__(self) -> str:
+        return f"{self.title}"

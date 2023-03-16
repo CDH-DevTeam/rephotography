@@ -13,7 +13,7 @@ router.register(rf'{endpoint}/place', views.PlaceViewSet, basename='place')
 router.register(rf'{endpoint}/image', views.IIIFImageViewSet, basename='image')
 # router.register(rf'{endpoint}/video', views.VideoViewSet, basename='video')
 # router.register(rf'{endpoint}/observation', views.ObservationViewSet, basename='observation')
-# router.register(rf'{endpoint}/rephotography', views.RePhotographyViewSet, basename='rephotography')
+router.register(rf'{endpoint}/rephotography', views.RePhotographyViewSet, basename='rephotography')
 
 
 urlpatterns = [
@@ -23,6 +23,6 @@ urlpatterns = [
     *utils.get_model_urls('rephotography', endpoint, 
         exclude=['image', 'place']),
 
-    *utils.get_model_urls('rephotography', f'{endpoint}', exclude=['image', 'place']),
+    *utils.get_model_urls('rephotography', f'{endpoint}', exclude=['image', 'place', 'rephotography']),
     *documentation
 ]
