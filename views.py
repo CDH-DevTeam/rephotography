@@ -11,7 +11,7 @@ class PlaceViewSet(DynamicDepthViewSet):
     search_fields = ['placename']
 
     def dispatch(self, request, *args, **kwargs):
-        model_name = request.GET['type']
+        model_name = request.GET.get('type')
         if model_name == 'image':
             self.model = models.Image
         elif model_name == 'video':
@@ -22,18 +22,17 @@ class PlaceViewSet(DynamicDepthViewSet):
 
     def get_queryset(self):
         queryset = models.Place.objects.all()
+        model_type = self.request.query_params.get('type')
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
-        objects = self.model.objects.all()
-        if start_date and end_date:
-            objects = objects.filter(date__year__gte=start_date, date__year__lte=end_date)
-        elif start_date:
-            objects = objects.filter(date__year=start_date)
-
-        queryset = models.Place.objects.all().filter(id__in=list(objects.values_list('place', flat=True)))
-
+        if model_type:
+            objects_type = self.model.objects.all()
+            if start_date and end_date:
+                objects_type = objects_type.filter(date__year__gte=start_date, date__year__lte=end_date)
+            elif start_date:
+                objects_type = objects_type.filter(date__year=start_date)
+            queryset = models.Place.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
         return queryset
-
 
 class PlaceGeoViewSet(GeoViewSet):
 
@@ -45,7 +44,7 @@ class PlaceGeoViewSet(GeoViewSet):
     bbox_filter_include_overlapping = True
 
     def dispatch(self, request, *args, **kwargs):
-        model_name = request.GET['type']
+        model_name = request.GET.get('type')
         if model_name == 'image':
             self.model_type = models.Image
         elif model_name == 'video':
@@ -56,16 +55,16 @@ class PlaceGeoViewSet(GeoViewSet):
 
     def get_queryset(self):
         queryset = models.Place.objects.all()
+        model_type_name = self.request.query_params.get('type')
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
-        objects = self.model_type.objects.all()
-        if start_date and end_date:
-            objects = objects.filter(date__year__gte=start_date, date__year__lte=end_date)
-        elif start_date:
-            objects = objects.filter(date__year=start_date)
-
-        queryset = models.Place.objects.all().filter(id__in=list(objects.values_list('place', flat=True)))
-
+        if model_type_name:
+            objects_type = self.model_type.objects.all()
+            if start_date and end_date:
+                objects_type = objects_type.filter(date__year__gte=start_date, date__year__lte=end_date)
+            elif start_date:
+                objects_type = objects_type.filter(date__year=start_date)
+            queryset = models.Place.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
         return queryset
 
 # Create your views here.
