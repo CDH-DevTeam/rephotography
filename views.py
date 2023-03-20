@@ -13,11 +13,11 @@ class PlaceViewSet(DynamicDepthViewSet):
     def dispatch(self, request, *args, **kwargs):
         model_name = request.GET.get('type')
         if model_name == 'image':
-            self.model = models.Image
+            self.model_type = models.Image
         elif model_name == 'video':
-            self.model = models.Video
+            self.model_type = models.Video
         elif model_name == 'observation':
-            self.model = models.Observation
+            self.model_type = models.Observation
         return super(PlaceViewSet, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -26,7 +26,7 @@ class PlaceViewSet(DynamicDepthViewSet):
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
         if model_type:
-            objects_type = self.model.objects.all()
+            objects_type = self.model_type.objects.all()
             if start_date and end_date:
                 objects_type = objects_type.filter(date__year__gte=start_date, date__year__lte=end_date)
             elif start_date:
