@@ -37,6 +37,7 @@ class PlaceAdmin(admin.GISModelAdmin):
     readonly_fields     = [*DEFAULT_FIELDS]
     list_display = ['name', 'geometry', 'description', 'comment']
     search_fields = ['name']
+    autocomplete_fields = ['tag']
 
     gis_widget_kwargs = {
         'attrs': {
