@@ -10,6 +10,12 @@ from rangefilter.filters import NumericRangeFilter
 from django.contrib.admin import EmptyFieldListFilter
 from django.conf import settings
 
+
+DEFAULT_LONGITUDE =  10.5000
+DEFAULT_LATITUDE  = 79.5000
+DEFAULT_ZOOM = 8
+
+
 # Register your models here.
 @admin.register(Creator)
 class CreatorAdmin(admin.ModelAdmin):
@@ -18,8 +24,19 @@ class CreatorAdmin(admin.ModelAdmin):
 
 @admin.register(Place)
 class PlaceAdmin(admin.GISModelAdmin):
+
+    fields              = get_fields(Place, exclude=['id'])
+    readonly_fields     = [*DEFAULT_FIELDS]
     list_display = ['name', 'geometry', 'description', 'comment']
     search_fields = ['name']
+
+    gis_widget_kwargs = {
+        'attrs': {
+            'default_lon' : DEFAULT_LONGITUDE,
+            'default_lat' : DEFAULT_LATITUDE,
+            'default_zoom' : DEFAULT_ZOOM,
+        },
+    }
 
 
 @admin.register(Tag)
@@ -36,14 +53,20 @@ class FocusAdmin(admin.GISModelAdmin):
 
 @admin.register(Image)
 class ImageModel(admin.ModelAdmin):
-    readonly_fields     = ['iiif_file']
+
+    fields              = ['image_preview', *get_fields(Image, exclude=['id'])]
+    readonly_fields     = ['iiif_file', 'uuid', 'image_preview', *DEFAULT_FIELDS]
     autocomplete_fields = ['creator', 'place', 'tag', 'focus']
-    list_display = ['title', 'creator', 'place', 'date', 'description']
+    list_display = ['title', 'thumbnail_preview', 'creator', 'place', 'date', 'description']
 
     list_per_page = 10
 
     def image_preview(self, obj):
-        return format_html(f'<img src="{settings.ORIGINAL_URL}/{obj.file}" height="300" />')
+        return format_html(f'<img src="{settings.IIIF_URL}{obj.iiif_file}/full/full/0/default.jpg" height="300" />')
+    
+    def thumbnail_preview(self, obj):
+        return format_html(f'<img src="{settings.IIIF_URL}{obj.iiif_file}/full/full/0/default.jpg" height="100" />')
+
 
 @admin.register(RePhotography)
 class RePhotographyAdmin(admin.ModelAdmin):
