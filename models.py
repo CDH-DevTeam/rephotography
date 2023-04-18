@@ -34,11 +34,23 @@ class Place(abstract.AbstractBaseModel):
     class Meta:
         verbose_name = _("Place")
 
+class Role(abstract.AbstractBaseModel):
+    role_name = models.CharField(verbose_name= _("role"), max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.role_name}"
+
+    class Meta:
+        verbose_name = _("role")
+        verbose_name_plural = _("roles")
+
+
 # Creator
 class Creator(abstract.AbstractBaseModel):
     # A photographer, or creator of an observtion
 
     name = models.CharField(max_length=256, unique=True, verbose_name=_("name"), help_text=_("Free-form name of the creator, photographer or researcher."))
+    role = models.ManyToManyField(Role, blank=True, null=True, help_text=_("Role of creator"))
     # add role like photographer, film maker, researcher ...
 
     class Meta:
@@ -67,7 +79,7 @@ class Focus(abstract.AbstractBaseModel):
 class Image(abstract.AbstractTIFFImageModel):
 
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("general.title"))
-    creator = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="photographer")
+    photographer = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="photographer")
     place   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="image_location")
     description = models.TextField(null=True, blank=True, help_text=("Descriptive text about the the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of photography"))
@@ -85,7 +97,7 @@ class Image(abstract.AbstractTIFFImageModel):
 # Video
 class Video(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("general.title"))
-    creator = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="director")
+    photographer = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="director")
     place  = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="video_location")
     link = models.URLField(blank=True, null=True, help_text=("Video link in GU Play"))
     description = models.TextField(null=True, blank=True, help_text=("Descriptive text about the the motif"))

@@ -15,12 +15,20 @@ DEFAULT_LONGITUDE =  10.5000
 DEFAULT_LATITUDE  = 79.5000
 DEFAULT_ZOOM = 8
 
+@admin.register(Role)
+class RoleAdmin(admin.ModelAdmin):
+    list_display = get_fields(Role) 
+    search_fields = ['role']
 
 # Register your models here.
 @admin.register(Creator)
 class CreatorAdmin(admin.ModelAdmin):
+    # fields              = get_fields(Creator, exclude=['id'])
+    # readonly_fields     = [*DEFAULT_FIELDS]
     list_display = ["name"]
-    search_fields = ["name"]
+    autocomplete_fields =['role']
+    search_fields = ['name', 'role']
+    
 
 @admin.register(Place)
 class PlaceAdmin(admin.GISModelAdmin):
@@ -50,14 +58,22 @@ class FocusAdmin(admin.GISModelAdmin):
     list_display = ['name', 'place', 'text']
     search_fields = ['name', 'text']
 
+    gis_widget_kwargs = {
+        'attrs': {
+            'default_lon' : DEFAULT_LONGITUDE,
+            'default_lat' : DEFAULT_LATITUDE,
+            'default_zoom' : DEFAULT_ZOOM,
+        },
+    }
+
 
 @admin.register(Image)
 class ImageModel(admin.ModelAdmin):
 
     fields              = ['image_preview', *get_fields(Image, exclude=['id'])]
     readonly_fields     = ['iiif_file', 'uuid', 'image_preview', *DEFAULT_FIELDS]
-    autocomplete_fields = ['creator', 'place', 'tag', 'focus']
-    list_display = ['title', 'thumbnail_preview', 'creator', 'place', 'date', 'description']
+    autocomplete_fields = ['photographer', 'place', 'tag', 'focus']
+    list_display = ['title', 'thumbnail_preview', 'photographer', 'place', 'date', 'description']
 
     list_per_page = 10
 
@@ -75,8 +91,8 @@ class RePhotographyAdmin(admin.ModelAdmin):
 
 @admin.register(Video)
 class VideoModel(admin.ModelAdmin):
-    autocomplete_fields = ['creator', 'place', 'tag', 'focus']
-    list_display = ['title', 'creator', 'place', 'link', 'date', 'description']
+    autocomplete_fields = ['photographer', 'place', 'tag', 'focus']
+    list_display = ['title', 'photographer', 'place', 'link', 'date', 'description']
 
 @admin.register(Observation)
 class ObservationModel(admin.ModelAdmin):
