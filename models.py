@@ -25,8 +25,8 @@ class Place(abstract.AbstractBaseModel):
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
     comment  = models.TextField(null=True, blank=True, verbose_name=_("comment"))
     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
-    min_year = models.DateField(blank=True, null=True)
-    max_year = models.DateField(blank=True, null=True)
+    # min_year = models.DateField(blank=True, null=True)
+    # max_year = models.DateField(blank=True, null=True)
 
     def __str__(self) -> str:
         return self.name
