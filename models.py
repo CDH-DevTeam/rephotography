@@ -51,6 +51,7 @@ class Creator(abstract.AbstractBaseModel):
 
 
 class Focus(abstract.AbstractBaseModel):
+    name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"))
     place = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
     text = models.TextField(null=True, blank=True)
 
@@ -59,7 +60,7 @@ class Focus(abstract.AbstractBaseModel):
         verbose_name_plural = _("Focuses")
 
     def __str__(self) -> str:
-        return f"{self.text}"
+        return f"{self.name}"
 
 
 # Photo

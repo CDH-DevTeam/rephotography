@@ -47,8 +47,8 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Focus)
 class FocusAdmin(admin.GISModelAdmin):
-    list_display = ['place', 'text']
-    search_fields = ['text']
+    list_display = ['name', 'place', 'text']
+    search_fields = ['name', 'text']
 
 
 @admin.register(Image)
