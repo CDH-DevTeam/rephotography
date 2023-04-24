@@ -99,6 +99,16 @@ class ObservationViewSet(DynamicDepthViewSet):
 
 class RePhotographyViewSet(DynamicDepthViewSet):
     
-    queryset = models.RePhotography.objects.all()
+    # queryset = models.RePhotography.objects.all()
     serializer_class = serializers.RePhotographySerializer
     filterset_fields = get_fields(models.RePhotography, exclude=DEFAULT_FIELDS)
+
+
+    def get_queryset(self):
+        queryset = models.RePhotography.objects.all()
+        if self.request.query_params.get('place'):
+            place_id = self.request.query_params.get('place')
+            queryset = models.RePhotography.objects.filter(old_image=place_id)
+
+
+        return queryset
