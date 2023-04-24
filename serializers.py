@@ -9,14 +9,14 @@ class PlaceSerializer(DynamicDepthSerializer):
 
     class Meta:
         model = Place
-        fields = get_fields(Place, exclude=DEFAULT_FIELDS+['min_year', 'max_year'])+ ['names', 'id']
+        fields = get_fields(Place, exclude=DEFAULT_FIELDS+['min_year', 'max_year'])+ [ 'id']
 
 
 class PlaceGeoSerializer(GeoFeatureModelSerializer):
 
     class Meta:
         model = Place
-        fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['names', 'id']
+        fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['id']
         geo_field = 'geometry'
         depth = 1
 
