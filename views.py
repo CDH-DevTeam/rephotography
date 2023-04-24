@@ -108,7 +108,7 @@ class RePhotographyViewSet(DynamicDepthViewSet):
         queryset = models.RePhotography.objects.all()
         if self.request.query_params.get('place'):
             place_id = self.request.query_params.get('place')
-            queryset = models.RePhotography.objects.filter(old_image=place_id)
-
+            queryset = models.RePhotography.objects.filter(old_image__place=place_id)
+            
 
         return queryset
