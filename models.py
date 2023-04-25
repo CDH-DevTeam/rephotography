@@ -78,7 +78,7 @@ class Focus(abstract.AbstractBaseModel):
 # Photo
 class Image(abstract.AbstractTIFFImageModel):
 
-    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("general.title"))
+    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     photographer = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="photographer")
     place   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="image_location")
     description = models.TextField(null=True, blank=True, help_text=("Descriptive text about the the motif"))
@@ -96,7 +96,7 @@ class Image(abstract.AbstractTIFFImageModel):
 
 # Video
 class Video(abstract.AbstractBaseModel):
-    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("general.title"))
+    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     photographer = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="director")
     place  = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="video_location")
     link = models.URLField(blank=True, null=True, help_text=("Video link in GU Play"))
@@ -110,7 +110,7 @@ class Video(abstract.AbstractBaseModel):
 
 # Observation
 class Observation(abstract.AbstractBaseModel):
-    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("general.title"))
+    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     creator = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="researcher")
     document = models.FileField(null=True, blank=True, storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("general.file"))
     place   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="research_location")
@@ -127,7 +127,7 @@ class Observation(abstract.AbstractBaseModel):
 
 # Re-photography
 class RePhotography(abstract.AbstractBaseModel):
-    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("general.title"))
+    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     old_image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="old_image")
     new_image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="new_image")
     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
