@@ -7,6 +7,19 @@ from diana.abstract.models import get_original_path
 # Create your models here.
 
 
+class ImageTypeTag(abstract.AbstractTagModel):
+    
+    class Meta:
+        verbose_name = _("Type of image")
+        verbose_name_plural = _("Types of image")
+
+    def __str__(self) -> str:
+        return self.text
+    
+    def __repr__(self) -> str:
+        return str(self)
+
+
 # Tag 
 class Tag(abstract.AbstractTagModel):
 
@@ -85,7 +98,7 @@ class Image(abstract.AbstractTIFFImageModel):
     date = models.DateField(null=True, blank=True, help_text=("Date of photography"))
     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
     focus = models.ForeignKey(Focus, null=True, blank=True, on_delete=models.CASCADE, help_text=("what is documented, also a place on a map"))
-
+    type = models.ForeignKey(ImageTypeTag, null=True, blank=True, on_delete=models.CASCADE, help_text=("Type of image"))
     
     class Meta:
         verbose_name = _("Image")

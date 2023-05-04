@@ -48,6 +48,12 @@ class PlaceAdmin(admin.GISModelAdmin):
     }
 
 
+
+@admin.register(ImageTypeTag)
+class ImageTypeTagAdmin(admin.ModelAdmin):
+    list_display = ['text']
+    search_fields = ['text']
+
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ['text']
@@ -73,8 +79,9 @@ class ImageModel(admin.ModelAdmin):
 
     fields              = ['image_preview', *get_fields(Image, exclude=['id'])]
     readonly_fields     = ['iiif_file', 'uuid', 'image_preview', *DEFAULT_FIELDS]
-    autocomplete_fields = ['photographer', 'place', 'tag', 'focus']
-    list_display = ['title', 'thumbnail_preview', 'photographer', 'place', 'date', 'description']
+    autocomplete_fields = ['photographer', 'place', 'tag', 'focus', 'type']
+    list_display = ['title', 'thumbnail_preview', 'photographer', 'place', 'date', 'description', 'type']
+    search_fields = ['title', 'photographer', 'place', 'date', 'type']
 
     list_per_page = 10
 
@@ -94,10 +101,11 @@ class RePhotographyAdmin(admin.ModelAdmin):
 class VideoModel(admin.ModelAdmin):
     autocomplete_fields = ['photographer', 'place', 'tag', 'focus']
     list_display = ['title', 'photographer', 'place', 'link', 'date', 'description']
+    search_fields = ['title', 'photographer', 'place', 'date']
+
 
 @admin.register(Observation)
 class ObservationModel(admin.ModelAdmin):
     autocomplete_fields = ['creator', 'place', 'tag', 'focus']
     list_display = ['title', 'creator', 'place', 'date', 'description']
-
-
+    search_fields = ['title', 'creator', 'place', 'date']
