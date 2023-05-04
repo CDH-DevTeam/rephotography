@@ -4,6 +4,9 @@ import diana.abstract.models as abstract
 from django.utils.translation import gettext_lazy as _
 from diana.storages import OriginalFileStorage
 from diana.abstract.models import get_original_path
+from ckeditor.fields import RichTextField
+from markdownfield.models import MarkdownField, RenderedMarkdownField
+from markdownfield.validators import VALIDATOR_STANDARD
 # Create your models here.
 
 
@@ -35,7 +38,7 @@ class Place(abstract.AbstractBaseModel):
     
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Free-form, non-indexed placename of the site."))
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
-    description = models.TextField(null=True, blank=True, verbose_name=_("description"))
+    description = RichTextField(null=True, blank=True, verbose_name=_("description"))
     comment  = models.TextField(null=True, blank=True, verbose_name=_("comment"))
     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
     # min_year = models.DateField(blank=True, null=True)
@@ -78,7 +81,7 @@ class Creator(abstract.AbstractBaseModel):
 class Focus(abstract.AbstractBaseModel):
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"))
     place = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
-    text = models.TextField(null=True, blank=True)
+    text = RichTextField(null=True, blank=True)
 
     class Meta:
         verbose_name = _("Focus")
@@ -94,7 +97,7 @@ class Image(abstract.AbstractTIFFImageModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     photographer = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="photographer")
     place   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="image_location")
-    description = models.TextField(null=True, blank=True, help_text=("Descriptive text about the motif"))
+    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of photography"))
     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
     focus = models.ForeignKey(Focus, null=True, blank=True, on_delete=models.CASCADE, help_text=("what is documented, also a place on a map"))
@@ -113,7 +116,7 @@ class Video(abstract.AbstractBaseModel):
     photographer = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="director")
     place  = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="video_location")
     link = models.URLField(blank=True, null=True, help_text=("Video link in GU Play"))
-    description = models.TextField(null=True, blank=True, help_text=("Descriptive text about the motif"))
+    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of video"))
     focus = models.ForeignKey(Focus, null=True, blank=True, on_delete=models.CASCADE, help_text=("what is documented, also a place on a map"))
     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
@@ -127,7 +130,7 @@ class Observation(abstract.AbstractBaseModel):
     creator = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="researcher")
     document = models.FileField(null=True, blank=True, storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("general.file"))
     place   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="research_location")
-    description = models.TextField(null=True, blank=True, help_text=("Descriptive text about the motif"))
+    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of tacking note"))
     focus = models.ForeignKey(Focus, null=True, blank=True, on_delete=models.CASCADE, help_text=("what is documented, also a place on a map"))
     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
@@ -144,6 +147,7 @@ class RePhotography(abstract.AbstractBaseModel):
     old_image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="old_image")
     new_image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="new_image")
     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
+    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the rephotography"))
 
     def __str__(self) -> str:
         return f"{self.title}"
