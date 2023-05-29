@@ -11,7 +11,7 @@ documentation = utils.build_app_api_documentation("rephotography", endpoint)
 router.register(rf'{endpoint}/geojson/place', views.PlaceGeoViewSet, basename='place on geojson')
 router.register(rf'{endpoint}/place', views.PlaceViewSet, basename='place')
 router.register(rf'{endpoint}/image', views.IIIFImageViewSet, basename='image')
-router.register(rf'{endpoint}/focus', views.FocusGeoViewSet, basename='focus')
+router.register(rf'{endpoint}/geojson/focus', views.FocusGeoViewSet, basename='focus')
 router.register(rf'{endpoint}/rephotography', views.RePhotographyViewSet, basename='rephotography')
 
 router.register(rf'{endpoint}/search/tag', views.TagSearchViewSet, basename='search objects by tag')
