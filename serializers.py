@@ -21,6 +21,14 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
         depth = 1
 
 
+class FocusSerializer(GeoFeatureModelSerializer):
+
+    class Meta:
+        model = Focus
+        fields = get_fields(Focus, exclude=DEFAULT_FIELDS)+ ['id']
+        geo_field = 'place'
+        depth = 1
+
 class TIFFImageSerializer(DynamicDepthSerializer):
 
     class Meta:

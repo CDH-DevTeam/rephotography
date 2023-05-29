@@ -1,6 +1,7 @@
 from unittest.mock import DEFAULT
 from . import models, serializers
 from django.db.models import Prefetch, Q
+from itertools import chain
 from diana.abstract.views import DynamicDepthViewSet, GeoViewSet
 from diana.abstract.models import get_fields, DEFAULT_FIELDS
 
@@ -67,6 +68,16 @@ class PlaceGeoViewSet(GeoViewSet):
             queryset = models.Place.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
         return queryset
 
+
+class FocusGeoViewSet(GeoViewSet):
+
+    serializer_class = serializers.FocusSerializer
+    queryset = models.Focus.objects.all()
+    filterset_fields = get_fields(models.Focus, exclude=DEFAULT_FIELDS + ['place'])
+    search_fields = ['name']
+    bbox_filter_field = 'place'
+
+
 # Create your views here.
 class IIIFImageViewSet(DynamicDepthViewSet):
     """
@@ -112,3 +123,32 @@ class RePhotographyViewSet(DynamicDepthViewSet):
             
 
         return queryset
+    
+
+
+class TypeSearchViewSet(DynamicDepthViewSet):
+    serializer_class = serializers.TIFFImageSerializer
+
+    def get_queryset(self):
+        q = self.request.GET["image_type"]
+        queryset = models.Image.objects.filter(type__text__icontains=q)
+        return queryset
+    
+    filterset_fields = ['id']+get_fields(models.Image, exclude=DEFAULT_FIELDS + ['iiif_file', 'file'])
+
+
+class TagSearchViewSet(GeoViewSet):
+    serializer_class = serializers.PlaceGeoSerializer
+    filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
+    search_fields = ['placename']
+    bbox_filter_field = 'geometry'
+    bbox_filter_include_overlapping = True
+
+    def get_queryset(self):
+        q = self.request.GET["tag_set"]
+        queryset = models.Place.objects.all().filter(Q(id__in=list(models.Image.objects.filter(tag__text__icontains=q).values_list('place', flat=True)))|
+                                                    Q(id__in=list(models.Video.objects.filter(tag__text__icontains=q).values_list('place', flat=True))) |
+                                                    Q(id__in=list(models.Observation.objects.filter(tag__text__icontains=q).values_list('place', flat=True))))
+        return queryset
+
+    
