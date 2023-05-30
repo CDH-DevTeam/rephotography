@@ -23,14 +23,15 @@ class PlaceViewSet(DynamicDepthViewSet):
         return super(PlaceViewSet, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        queryset = models.Place.objects.all()
+        # queryset = models.Place.objects.all()
         model_type = self.request.query_params.get('type')
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
 
         if model_type:
-            if model_type == 'art':
-                objects_type = models.Image.objects.all(type__text__icontains='drwaing')
+            if model_type == 'art' or model_type== 'drawing':
+                objects_type = models.Image.objects.all().filter(type__text__icontains=model_type)
+
                 if start_date and end_date:
                     objects_type = objects_type.filter(date__year__gte=start_date, date__year__lte=end_date)
                 elif start_date:
@@ -58,28 +59,28 @@ class PlaceViewSet(DynamicDepthViewSet):
 
         else:
             if start_date and end_date:
-                queryset = models.Place.objects.all.filter(
+                queryset = models.Place.objects.all().filter(
                     Q(id__in=list(models.Image.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Video.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Observation.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
                 )
             elif start_date:
-                queryset = models.Place.objects.all.filter(
+                queryset = models.Place.objects.all().filter(
                     Q(id__in=list(models.Image.filter(date__year__gte=start_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Video.filter(date__year__gte=start_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Observation.filter(date__year__gte=start_date).values_list('place', flat=True)))
                 )
             elif end_date:
-                queryset = models.Place.objects.all.filter(
+                queryset = models.Place.objects.all().filter(
                     Q(id__in=list(models.Image.filter(date__year__lte=end_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Video.filter(date__year__lte=end_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Observation.filter(date__year__lte=end_date).values_list('place', flat=True)))
                 )
             else:
-                queryset = models.Place.objects.all.filter(
-                     Q(id__in=list(models.Image.all().values_list('place', flat=True)))
-                    |Q(id__in=list(models.Video.all().values_list('place', flat=True)))
-                    |Q(id__in=list(models.Observation.all().values_list('place', flat=True)))
+                queryset = models.Place.objects.all().filter(
+                     Q(id__in=list(models.Image.objects.all().values_list('place', flat=True)))
+                    |Q(id__in=list(models.Video.objects.all().values_list('place', flat=True)))
+                    |Q(id__in=list(models.Observation.objects.all().values_list('place', flat=True)))
                 )
                 
         return queryset
@@ -118,7 +119,7 @@ class PlaceGeoViewSet(GeoViewSet):
     #     return queryset
 
     def get_queryset(self):
-        queryset = models.Place.objects.all()
+        # queryset = models.Place.objects.all()
         model_type = self.request.query_params.get('type')
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
