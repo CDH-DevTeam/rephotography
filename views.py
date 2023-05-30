@@ -108,11 +108,11 @@ class PlaceGeoViewSet(GeoViewSet):
 class FocusGeoViewSet(GeoViewSet):
 
     serializer_class = serializers.FocusSerializer
-    queryset = models.Focus.objects.all()
+    # queryset = models.Focus.objects.all()
+    queryset = models.Focus.objects.all().filter(id__in=list(models.Image.objects.all().values_list('focus', flat=True)))
     filterset_fields = get_fields(models.Focus, exclude=DEFAULT_FIELDS + ['place'])
     search_fields = ['name']
     bbox_filter_field = 'place'
-
 
 # Create your views here.
 class IIIFImageViewSet(DynamicDepthViewSet):
