@@ -26,13 +26,49 @@ class PlaceViewSet(DynamicDepthViewSet):
         model_type = self.request.query_params.get('type')
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
+
         if model_type:
-            objects_type = self.model_type.objects.all()
+            if model_type == 'art' or model_type =='drawing':
+                objects_type = models.Image.objects.all()
+            else:
+                objects_type = self.model_type.objects.all()
+
             if start_date and end_date:
                 objects_type = objects_type.filter(date__year__gte=start_date, date__year__lte=end_date)
             elif start_date:
-                objects_type = objects_type.filter(date__year=start_date)
+                objects_type = objects_type.filter(date__year__gte=start_date)
+            elif end_date:
+                objects_type = objects_type.filter(date__year__lte=end_date)
+            else:
+                objects_type = objects_type.all()
+
             queryset = models.Place.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
+        else:
+            if start_date and end_date:
+                queryset = models.Place.objects.all.filter(
+                    Q(id__in=list(models.Image.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
+                    |Q(id__in=list(models.Video.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
+                    |Q(id__in=list(models.Observation.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
+                )
+            elif start_date:
+                queryset = models.Place.objects.all.filter(
+                    Q(id__in=list(models.Image.filter(date__year__gte=start_date).values_list('place', flat=True)))
+                    |Q(id__in=list(models.Video.filter(date__year__gte=start_date).values_list('place', flat=True)))
+                    |Q(id__in=list(models.Observation.filter(date__year__gte=start_date).values_list('place', flat=True)))
+                )
+            elif end_date:
+                queryset = models.Place.objects.all.filter(
+                    Q(id__in=list(models.Image.filter(date__year__lte=end_date).values_list('place', flat=True)))
+                    |Q(id__in=list(models.Video.filter(date__year__lte=end_date).values_list('place', flat=True)))
+                    |Q(id__in=list(models.Observation.filter(date__year__lte=end_date).values_list('place', flat=True)))
+                )
+            else:
+                queryset = models.Place.objects.all.filter(
+                     Q(id__in=list(models.Image.all().values_list('place', flat=True)))
+                    |Q(id__in=list(models.Video.all().values_list('place', flat=True)))
+                    |Q(id__in=list(models.Observation.all().values_list('place', flat=True)))
+                )
+                
         return queryset
 
 class PlaceGeoViewSet(GeoViewSet):
@@ -121,10 +157,8 @@ class RePhotographyViewSet(DynamicDepthViewSet):
             place_id = self.request.query_params.get('place')
             queryset = models.RePhotography.objects.filter(old_image__place=place_id)
             
-
         return queryset
     
-
 
 class TypeSearchViewSet(DynamicDepthViewSet):
     serializer_class = serializers.TIFFImageSerializer
