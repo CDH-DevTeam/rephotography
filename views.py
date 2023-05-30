@@ -124,7 +124,7 @@ class PlaceGeoViewSet(GeoViewSet):
         end_date = self.request.query_params.get('end_date')
 
         if model_type:
-            if model_type == 'art' or model_type== 'drwaing':
+            if model_type == 'art' or model_type== 'drawing':
                 objects_type = models.Image.objects.all().filter(type__text__icontains=model_type)
 
                 if start_date and end_date:
