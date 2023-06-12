@@ -9,14 +9,14 @@ class PlaceSerializer(DynamicDepthSerializer):
 
     class Meta:
         model = Place
-        fields = get_fields(Place, exclude=DEFAULT_FIELDS+['min_year', 'max_year'])+ [ 'id']
+        fields = ['id']+get_fields(Place, exclude=DEFAULT_FIELDS+['min_year', 'max_year'])
 
 
 class PlaceGeoSerializer(GeoFeatureModelSerializer):
 
     class Meta:
         model = Place
-        fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['id']
+        fields = ['id']+get_fields(Place, exclude=DEFAULT_FIELDS)
         geo_field = 'geometry'
         depth = 1
 
@@ -25,7 +25,7 @@ class FocusSerializer(GeoFeatureModelSerializer):
 
     class Meta:
         model = Focus
-        fields = get_fields(Focus, exclude=DEFAULT_FIELDS)+ ['id']
+        fields = ['id']+get_fields(Focus, exclude=DEFAULT_FIELDS)
         geo_field = 'place'
         depth = 1
 
@@ -33,25 +33,25 @@ class TIFFImageSerializer(DynamicDepthSerializer):
 
     class Meta:
         model = Image
-        fields = get_fields(Image, exclude=DEFAULT_FIELDS)+ ['id']
+        fields = ['id']+get_fields(Image, exclude=DEFAULT_FIELDS)
 
 
 class VideoSerializer(DynamicDepthSerializer):
 
     class Meta:
         model = Video
-        fields = get_fields(Video, exclude=DEFAULT_FIELDS)+ ['id']
+        fields = ['id']+get_fields(Video, exclude=DEFAULT_FIELDS)
 
 
 class ObservationSerializer(DynamicDepthSerializer):
 
     class Meta:
         model = Observation
-        fields = get_fields(Observation, exclude=DEFAULT_FIELDS)+ ['id']
+        fields = ['id']+get_fields(Observation, exclude=DEFAULT_FIELDS)
 
 
 class RePhotographySerializer(DynamicDepthSerializer):
 
     class Meta:
         model = RePhotography
-        fields = get_fields(RePhotography, exclude=DEFAULT_FIELDS)+ ['id']
+        fields = ['id']+get_fields(RePhotography, exclude=DEFAULT_FIELDS)

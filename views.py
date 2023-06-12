@@ -204,7 +204,7 @@ class ObservationViewSet(DynamicDepthViewSet):
     
     queryset = models.Observation.objects.all()
     serializer_class = serializers.ObservationSerializer
-    filterset_fields = get_fields(models.Observation, exclude=DEFAULT_FIELDS+['document'])
+    filterset_fields = get_fields(models.Observation, exclude=DEFAULT_FIELDS)
 
 class RePhotographyViewSet(DynamicDepthViewSet):
     
@@ -247,4 +247,13 @@ class TagSearchViewSet(GeoViewSet):
                                                     Q(id__in=list(models.Observation.objects.filter(tag__text__icontains=q).values_list('place', flat=True))))
         return queryset
 
+    
+class RephotographyFocusSearch(DynamicDepthViewSet):
+    serializer_class = serializers.RePhotographySerializer
+    filterset_fields = get_fields(models.RePhotography, exclude=DEFAULT_FIELDS)
+
+    def get_queryset(self):
+        focus_id = self.request.GET["focus_id"]
+        queryset = models.RePhotography.objects.filter(new_image__focus=focus_id)
+        return queryset
     
