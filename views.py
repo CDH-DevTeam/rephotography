@@ -204,7 +204,7 @@ class ObservationViewSet(DynamicDepthViewSet):
     
     queryset = models.Observation.objects.all()
     serializer_class = serializers.ObservationSerializer
-    filterset_fields = get_fields(models.Observation, exclude=DEFAULT_FIELDS)
+    filterset_fields = get_fields(models.Observation, exclude=DEFAULT_FIELDS+['document'])
 
 class RePhotographyViewSet(DynamicDepthViewSet):
     
