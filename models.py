@@ -66,7 +66,7 @@ class Creator(abstract.AbstractBaseModel):
     # A photographer, or creator of an observtion
 
     name = models.CharField(max_length=256, unique=True, verbose_name=_("name"), help_text=_("Free-form name of the creator, photographer or researcher."))
-    role = models.ManyToManyField(Role, blank=True, null=True, help_text=_("Role of creator"))
+    role = models.ManyToManyField(Role, blank=True, help_text=_("Role of creator"))
     # add role like photographer, film maker, researcher ...
 
     class Meta:
